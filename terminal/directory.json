@@ -1,0 +1,35 @@
+{
+    "name": "/",
+    "files": [],
+    "directories": [
+        {
+            "name": "home",
+            "files": [],
+            "directories": [
+                {
+                    "name": "guest",
+                    "files": [
+                        {
+                            "filename": "readme.txt",
+                            "content": "asda"
+                        },
+                        {
+                            "filename": "doop.txt",
+                            "content": "doop"
+                        }
+                    ],
+                    "directories": [
+                        {
+                            "name": "downloads",
+                            "files": []
+                        },
+                        {
+                            "name": "documents",
+                            "files": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

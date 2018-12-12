@@ -1,0 +1,27 @@
+<html style="background-color: #f5f5f5;">
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="terminal.css" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
+        <script src="terminal.js" type="text/javascript"></script>
+    </head>
+    <body style="padding: 20px;">
+        <div id="terminalWindow">
+            <div id="titleBar">
+                <div id="titleButtons">
+                    <span style="background-color: #ff5f56"></span>
+                    <span style="background-color: #ffbd2e"></span>
+                    <span style="background-color: #27c93f"></span>
+                </div>
+                <div id="titleTitle"><span id="titlePath">guest</span> - bash</div>
+            </div>
+            <div id="terminal" onclick="focusInput()">
+                <div id="terminalOutput"></div>
+                <div id="terminalInput">
+                    <span id="commandPath">guest@brakebusk.com:~$ </span>
+                    <input type="text" id="commandInput" onkeydown="if (event.keyCode == 13) enterCommand();">
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
