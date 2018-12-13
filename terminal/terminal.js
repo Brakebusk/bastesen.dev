@@ -129,6 +129,33 @@ function updatePathLabels() {
     document.getElementById("commandPath").textContent = "guest@brakebusk.com:" + _path + "$ ";
 }
 
+function navigate(relativePath) {
+    //Navigate to selected path and return directory from dirStruct
+
+    let truePath = path;
+    //Find true path:
+    if (relativePath != "") {
+        if (relativePath.slice(0, 2) == "..") {
+            truePath = truePath.slice(0, truePath.lastIndexOf("/")); //Jump back by one directory
+            relativePath = relativePath.slice(2);
+        } else if (relativePath.slice(0, 1) == ".") {
+            relativePath = relativePath.slice(1);
+        } else if (relativePath.slice(0, 1) != "/") {
+            relativePath = "/" + relativePath;
+        }
+        truePath += relativePath;
+    }
+
+    //Navigate to truePath:
+    let pathSplit = truePath.split("/");
+    let selDir = dirStruct["/"];
+    for (var i = 1; i < pathSplit.length; i++) {
+        selDir = selDir["directories"][pathSplit[i]];
+        if (!selDir) throw "Invalid path";
+    }
+    return selDir;
+}
+
 //Command handling:
 
 function handle_ls(command) {
@@ -173,28 +200,11 @@ function handle_ls(command) {
         }
     }
 
-    let truePath = path;
-    //Find true path:
-    if (relativePath != "") {
-        if (relativePath.slice(0, 2) == "..") {
-            truePath = truePath.slice(0, truePath.lastIndexOf("/")); //Jump back by one directory
-            relativePath = relativePath.slice(2);
-        } else if (relativePath.slice(0, 1) == ".") {
-            relativePath = relativePath.slice(1);
-        }
-        truePath += relativePath;
-    }
-
-    let pathSplit = truePath.split("/");
-    console.log(truePath);
-    let selDir = dirStruct["/"];
-    for (var i = 1; i < pathSplit.length; i++) {
-        try {
-            selDir = selDir["directories"][pathSplit[i]];
-        } catch {
-            addOutput("ls: cannot access '" + relativePath + "' no such file or directory");
-            return;
-        }
+    try {
+        var selDir = navigate(relativePath);
+    } catch {
+        addOutput("ls: cannot access '" + relativePath + "' no such file or directory");
+        return;
     }
 
     let output = "";
