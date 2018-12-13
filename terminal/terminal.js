@@ -218,6 +218,18 @@ function navigate(relativePath) {
     return selDir;
 }
 
+function sortedKeys(dict, reverse) {
+    //Return keys of dictionary in sorted order
+
+    var keys = [];
+    for (var key in dict) {
+        keys.push(key);
+    }
+    keys.sort();
+    if (reverse) keys.reverse();
+    return keys;
+}
+
 //Command handling:
 
 function handle_ls(command) {
@@ -273,13 +285,20 @@ function handle_ls(command) {
     let directories = selDir["directories"]; //Directories in selected directory
     let files = selDir["files"]; //Files in selected directory
 
-    if (hidden) output += ". .. ";
-    for (var dirName in directories) {
-        output += dirName + " ";
+    if (hidden) {
+        //Add hidden files and directories
+        directories["."] = {};
+        directories[".."] = {};
     }
 
-    for (var filename in files) {
-        output += filename + " ";
+    directories = sortedKeys(directories, reverse);
+    for (var i = 0; i < directories.length; i++) {
+        output += directories[i] + " ";
+    }
+
+    files = sortedKeys(files, reverse);
+    for (var i = 0; i < files.length; i++) {
+        output += files[i] + " ";
     }
     addOutput(output);
 }
