@@ -242,7 +242,6 @@ function handle_ls(command) {
     let hidden = false; //-a option
     let markDirs = false; //-F option
     let reverse = false; //-r option
-    let sort = false; //-lS option
 
     //Parse options:
     for (var i = 0; i < options.length; i++) {
@@ -256,14 +255,15 @@ function handle_ls(command) {
                 case "-a":
                     hidden = true;
                     break;
+                case "-la":
+                    verbose = true;
+                    hidden = true;
+                    break;
                 case "-F":
                     markDirs = true;
                     break;
                 case "-r":
                     reverse = true;
-                case "-lS":
-                    sort = true;
-                    break;
                 default:
                     addOutput("ls: invalid option -- '" + options[i].slice(1) + "'");
                     return;
@@ -287,20 +287,60 @@ function handle_ls(command) {
 
     if (hidden) {
         //Add hidden files and directories
-        directories["."] = {};
-        directories[".."] = {};
+        directories["."] = {"edited": selDir["edited"]};
+        directories[".."] = {"edited": selDir["edited"]};
     }
 
+    //Sort directory and file lists:
     directories = sortedKeys(directories, reverse);
-    for (var i = 0; i < directories.length; i++) {
-        output += directories[i];
-        if (markDirs) output += "/";
-        output += " ";
-    }
-
     files = sortedKeys(files, reverse);
-    for (var i = 0; i < files.length; i++) {
-        output += files[i] + " ";
+    
+    if (!verbose) {
+        //Normal list
+        
+        for (var i = 0; i < directories.length; i++) {
+            output += directories[i];
+            if (markDirs) output += "/";
+            output += " ";
+        }
+        
+        for (var i = 0; i < files.length; i++) {
+            output += files[i] + " ";
+        }
+    } else {
+        //Verbose list
+
+        //Find largest file size:
+        var longest = 0;
+        for (var i = 0; i < files.length; i++) {
+            let s = selDir["files"][files[i]]["size"];
+            if (s.toString().length > longest) longest = s.toString().length;
+        }
+        
+        //Print directories:
+        for (var i = 0; i < directories.length; i++) {
+            if (output.length > 0) output += "\r\n";
+
+            let edited = selDir["directories"][directories[i]]["edited"];
+            let padding = longest - 3;
+            if (padding < 0) {
+                longest = 3;
+                padding = 0;
+            }
+            output += "drwxr-xr-x 1 guest guest " + " ".repeat(padding) + "512 " + edited + " " +  directories[i];
+        }
+
+        //Print files:
+        for (var i = 0; i < files.length; i++) {
+            if (output.length > 0) output += "\r\n";
+
+            let size = selDir["files"][files[i]]["size"];
+            let edited = selDir["files"][files[i]]["edited"];
+            let padding = longest - size.toString().length;
+            if (padding < 0) padding = 0;
+            output += "drwxr-xr-x 1 guest guest " + " ".repeat(padding) + size + " " + edited + " " +  files[i];
+        }
+        
     }
     addOutput(output);
 

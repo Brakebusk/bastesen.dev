@@ -1,27 +1,34 @@
 {
     "/": {
+        "edited": "Nov  5 19:17",
         "files": {},
         "directories": {
             "home": {
+                "edited": "Nov  5 19:17",
                 "files": {},
                 "directories": {
                     "guest": {
+                        "edited": "Nov  5 19:17",
                         "files": {
                             "readme.txt": {
                                 "content": "asda",
-                                "edited": "Nov 5 19:17"
+                                "edited": "Nov  5 19:17",
+                                "size": 12312
                             },
                             "doop.txt": {
                                 "content": "doop",
-                                "edited": "Oct 20 08:25"
+                                "edited": "Oct 20 08:25",
+                                "size": 12312
                             }
                         },
                         "directories": {
                             "downloads": {
+                                "edited": "Sept 7 12:13",
                                 "files": {},
                                 "directories": {}
                             },
                             "documents": {
+                                "edited": "Sept 7 12:13",
                                 "files": {},
                                 "directories": {}
                             }
