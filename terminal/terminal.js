@@ -1,7 +1,8 @@
 var path = "/home/guest"; //Current path
 var dirStruct = null;
-loadDirectories("directory.json"); //Load directory structure
 var commandHistory = [];
+var tmpCmd = ""; //Temporary command storage
+var cIndex = -1; //Hold current selected command index for up/down keys
 
 function loadDirectories(filename) {
     //Load and return JSON file
@@ -16,22 +17,83 @@ function loadDirectories(filename) {
     xmlhttp.send();
 }
 
+function onloadPrep() {
+    //Onload preparations
+    
+    loadDirectories("directory.json"); //Load directory structure
+    //Prevent up/down keys from changing carret position:
+    document.getElementById('commandInput').addEventListener('keydown', function(e) {
+        if (e.which === 38 || e.which === 40) {
+            e.preventDefault();
+        }
+    });
+    focusInput();
+}
+
 function focusInput() {
     //Focus on input element. Called when cliking inside terminal
     document.getElementById("commandInput").focus();
 }
 
+function inputKeydown(event) {
+    //Called each time user presses key while input box is in focus
+
+    switch (event.keyCode) {
+        case 13: //Enter
+            enterCommand();
+            break;
+        case 38: //Up arrow
+            prevCommand();
+            break;
+        case 40: //Down arrow
+            nextCommand();
+    }
+}
+
 function enterCommand() {
     //Parse command entered by user into terminal. Called when pressing enter after input
-
+    
+    cIndex = -1; //Reset up/down history
+    tmpCmd = ""; //Reset temporary input storage
     let inputElem = document.getElementById("commandInput");
     let command = inputElem.value;
     addToLog(command);
     inputElem.value = "";
 
-    commandHistory.push(command);
+    if (command.length > 0) commandHistory.push(command);
     parseCommand(command);
     updatePathLabels();
+}
+
+function prevCommand() {
+    //Called when user presses up key. Loads up previous entered command (given there is one)
+
+    var cmdInput = document.getElementById("commandInput");
+    if (commandHistory.length > 0) {
+        if (cIndex > 0) {
+            cIndex--;
+        } else if (cIndex == -1) {
+            cIndex = commandHistory.length -1;
+            tmpCmd = cmdInput.value;
+        }
+        cmdInput.value = commandHistory[cIndex];
+    }
+}
+
+function nextCommand() {
+    //Called when user presses down key. Loads up next entered command (given there is one)
+
+    var cmdInput = document.getElementById("commandInput");
+    
+    if (cIndex != -1) {
+        cIndex++;
+        if (cIndex == commandHistory.length) {
+            cIndex = -1;
+            cmdInput.value = tmpCmd;
+        } else {
+            cmdInput.value = commandHistory[cIndex];
+        }
+    }
 }
 
 function parseCommand(command) {
@@ -211,11 +273,7 @@ function handle_ls(command) {
     let directories = selDir["directories"]; //Directories in selected directory
     let files = selDir["files"]; //Files in selected directory
 
-
-    console.log(selDir);
-    console.log(directories);
-    console.log(files);
-
+    if (hidden) output += ". .. ";
     for (var dirName in directories) {
         output += dirName + " ";
     }

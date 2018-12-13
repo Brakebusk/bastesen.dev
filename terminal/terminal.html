@@ -5,7 +5,7 @@
         <link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
         <script src="terminal.js" type="text/javascript"></script>
     </head>
-    <body style="padding: 20px;" onload="focusInput()">
+    <body style="padding: 20px;" onload="onloadPrep()">
         <div id="terminalWindow">
             <div id="titleBar">
                 <div id="titleButtons">
@@ -19,7 +19,7 @@
                 <div id="terminalOutput"></div>
                 <div id="terminalInput">
                     <span id="commandPath">guest@brakebusk.com:~$ </span>
-                    <input type="text" id="commandInput" onkeydown="if (event.keyCode == 13) enterCommand();">
+                    <input type="text" id="commandInput" onkeydown="inputKeydown(event)">
                 </div>
             </div>
         </div>
