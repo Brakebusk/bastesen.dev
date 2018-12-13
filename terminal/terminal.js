@@ -293,7 +293,9 @@ function handle_ls(command) {
 
     directories = sortedKeys(directories, reverse);
     for (var i = 0; i < directories.length; i++) {
-        output += directories[i] + " ";
+        output += directories[i];
+        if (markDirs) output += "/";
+        output += " ";
     }
 
     files = sortedKeys(files, reverse);
