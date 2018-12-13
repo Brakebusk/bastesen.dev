@@ -301,6 +301,12 @@ function handle_ls(command) {
         output += files[i] + " ";
     }
     addOutput(output);
+
+    if (hidden) {
+        //Reset . and .. pointers
+        delete selDir["directories"][".."];
+        delete selDir["directories"]["."];
+    }
 }
 
 function handle_mkdir(command) {
