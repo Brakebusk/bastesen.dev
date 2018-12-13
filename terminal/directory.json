@@ -1,35 +1,34 @@
 {
-    "name": "/",
-    "files": [],
-    "directories": [
-        {
-            "name": "home",
-            "files": [],
-            "directories": [
-                {
-                    "name": "guest",
-                    "files": [
-                        {
-                            "filename": "readme.txt",
-                            "content": "asda"
+    "/": {
+        "files": {},
+        "directories": {
+            "home": {
+                "files": {},
+                "directories": {
+                    "guest": {
+                        "files": {
+                            "readme.txt": {
+                                "content": "asda",
+                                "edited": "Nov 5 19:17"
+                            },
+                            "doop.txt": {
+                                "content": "doop",
+                                "edited": "Oct 20 08:25"
+                            }
                         },
-                        {
-                            "filename": "doop.txt",
-                            "content": "doop"
+                        "directories": {
+                            "downloads": {
+                                "files": {},
+                                "directories": {}
+                            },
+                            "documents": {
+                                "files": {},
+                                "directories": {}
+                            }
                         }
-                    ],
-                    "directories": [
-                        {
-                            "name": "downloads",
-                            "files": []
-                        },
-                        {
-                            "name": "documents",
-                            "files": []
-                        }
-                    ]
+                    }
                 }
-            ]
+            }
         }
-    ]
+    }
 }

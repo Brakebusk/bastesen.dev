@@ -1,5 +1,20 @@
 var path = "/home/guest"; //Current path
+var dirStruct = null;
+loadDirectories("directory.json"); //Load directory structure
 var commandHistory = [];
+
+function loadDirectories(filename) {
+    //Load and return JSON file
+
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            dirStruct = JSON.parse(this.responseText);
+        }
+    };
+    xmlhttp.open("GET", filename, true);
+    xmlhttp.send();
+}
 
 function focusInput() {
     //Focus on input element. Called when cliking inside terminal
@@ -117,7 +132,88 @@ function updatePathLabels() {
 //Command handling:
 
 function handle_ls(command) {
+    command = command.slice(3); //Strip "ls " beggining
+    let options = command.split(" ");
+    let relativePath = "";
 
+    //Possible option flags:
+    let verbose = false; //-l option
+    let hidden = false; //-a option
+    let markDirs = false; //-F option
+    let reverse = false; //-r option
+    let sort = false; //-lS option
+
+    //Parse options:
+    for (var i = 0; i < options.length; i++) {
+        //For each option
+        if (options[i][0] == "-") {
+            //Flag
+            switch (options[i]) {
+                case "-l":
+                    verbose = true;
+                    break;
+                case "-a":
+                    hidden = true;
+                    break;
+                case "-F":
+                    markDirs = true;
+                    break;
+                case "-r":
+                    reverse = true;
+                case "-lS":
+                    sort = true;
+                    break;
+                default:
+                    addOutput("ls: invalid option -- '" + options[i].slice(1) + "'");
+                    return;
+            }
+        } else {
+            //Path
+            relativePath = options[i];
+        }
+    }
+
+    let truePath = path;
+    //Find true path:
+    if (relativePath != "") {
+        if (relativePath.slice(0, 2) == "..") {
+            truePath = truePath.slice(0, truePath.lastIndexOf("/")); //Jump back by one directory
+            relativePath = relativePath.slice(2);
+        } else if (relativePath.slice(0, 1) == ".") {
+            relativePath = relativePath.slice(1);
+        }
+        truePath += relativePath;
+    }
+
+    let pathSplit = truePath.split("/");
+    console.log(truePath);
+    let selDir = dirStruct["/"];
+    for (var i = 1; i < pathSplit.length; i++) {
+        try {
+            selDir = selDir["directories"][pathSplit[i]];
+        } catch {
+            addOutput("ls: cannot access '" + relativePath + "' no such file or directory");
+            return;
+        }
+    }
+
+    let output = "";
+    let directories = selDir["directories"]; //Directories in selected directory
+    let files = selDir["files"]; //Files in selected directory
+
+
+    console.log(selDir);
+    console.log(directories);
+    console.log(files);
+
+    for (var dirName in directories) {
+        output += dirName + " ";
+    }
+
+    for (var filename in files) {
+        output += filename + " ";
+    }
+    addOutput(output);
 }
 
 function handle_mkdir(command) {
