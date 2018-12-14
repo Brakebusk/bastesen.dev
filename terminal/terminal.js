@@ -47,6 +47,9 @@ function inputKeydown(event) {
             break;
         case 40: //Down arrow
             nextCommand();
+            break;
+        case 9: //Tab
+            autofill();
     }
 }
 
@@ -94,6 +97,10 @@ function nextCommand() {
             cmdInput.value = commandHistory[cIndex];
         }
     }
+}
+
+function autofill() {
+    
 }
 
 function parseCommand(command) {
@@ -191,8 +198,9 @@ function updatePathLabels() {
     document.getElementById("commandPath").textContent = "guest@brakebusk.com:" + _path + "$ ";
 }
 
-function navigate(relativePath) {
+function navigate(relativePath, getPath) {
     //Navigate to selected path and return directory from dirStruct
+    //getPath: boolean return path istead of directory
 
     let truePath = path;
     //Find true path:
@@ -215,6 +223,7 @@ function navigate(relativePath) {
         selDir = selDir["directories"][pathSplit[i]];
         if (!selDir) throw "Invalid path";
     }
+    if (getPath) return truePath;
     return selDir;
 }
 
@@ -275,9 +284,9 @@ function handle_ls(command) {
     }
 
     try {
-        var selDir = navigate(relativePath);
+        var selDir = navigate(relativePath, false);
     } catch {
-        addOutput("ls: cannot access '" + relativePath + "' no such file or directory");
+        addOutput("ls: cannot access '" + relativePath + "': No such file or directory");
         return;
     }
 
@@ -360,7 +369,15 @@ function handle_cat(command) {
 }
 
 function handle_cd(command) {
-
+    var relativePath = command.slice(3); //Strip "cd " beggining
+    
+    try {
+        path = navigate(relativePath, true); //Try to navigate
+    } catch {
+        addOutput("-bash: cd: " + relativePath + ": No such file or directory");
+        return;
+    }
+    updatePathLabels();
 }
 
 function handle_pwd(command) {
