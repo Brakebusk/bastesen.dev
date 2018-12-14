@@ -23,7 +23,7 @@ function onloadPrep() {
     loadDirectories("directory.json"); //Load directory structure
     //Prevent up/down keys from changing carret position:
     document.getElementById('commandInput').addEventListener('keydown', function(e) {
-        if (e.which === 38 || e.which === 40) {
+        if (e.which === 38 || e.which === 40 || e.which === 9) {
             e.preventDefault();
         }
     });
@@ -100,7 +100,36 @@ function nextCommand() {
 }
 
 function autofill() {
-    
+    //Called when user presses tab.
+    //Search through current directory + files and autofill input to closest match (given there is one)
+    let cmdInput = document.getElementById("commandInput");
+    let query = cmdInput.value;
+
+    try {
+        var selDir = navigate("", false);
+    } catch {
+        console.log("Error: unable to navigate to current directory.");
+    }
+
+    let directories = selDir["directories"]; //Directories in selected directory
+    let files = selDir["files"]; //Files in selected directory    
+
+    directories = sortedKeys(directories, false);
+    files = sortedKeys(files, false);
+
+    //Concatinate lists of directories and files:
+    let all = directories.concat(files);
+    all.sort();
+
+    //Create match function:
+    function isMatch(name) {
+        return name.startsWith(query);
+    }
+    let closest = all.find(isMatch);
+
+    if (closest) {
+        cmdInput.value = closest;
+    }
 }
 
 function parseCommand(command) {
