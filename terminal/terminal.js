@@ -103,7 +103,8 @@ function autofill() {
     //Called when user presses tab.
     //Search through current directory + files and autofill input to closest match (given there is one)
     let cmdInput = document.getElementById("commandInput");
-    let query = cmdInput.value;
+    let query = cmdInput.value.split(" ");
+    query = query[query.length - 1]; //Restrict to only last word typed
 
     try {
         var selDir = navigate("", false);
@@ -128,7 +129,7 @@ function autofill() {
     let closest = all.find(isMatch);
 
     if (closest) {
-        cmdInput.value = closest;
+        cmdInput.value += closest.slice(query.length); //Fill in rest
     }
 }
 
