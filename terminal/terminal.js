@@ -410,7 +410,7 @@ function handle_mkdir(command) {
             return;
         }
         
-        let relativePath = contentSplit[i].slice(0, contentSplit[i].length - folderName.length - 1)
+        var relativePath = contentSplit[i].substr(0, contentSplit[i].length - folderName.length - 1);
         
         try {
             var selDir = navigate(relativePath, false);
@@ -441,7 +441,22 @@ function handle_mkdir(command) {
 }
 
 function handle_cat(command) {
+    var cmdContent = command.slice(4); //Strip "cat " beggining
 
+    let dirSplit = cmdContent.split("/");
+    var filename = dirSplit[dirSplit.length-1];
+    var relativePath = cmdContent.substr(0, cmdContent.length - filename.length - 1);
+
+    try {
+        var selDir = navigate(relativePath, false);
+
+        if (filename in selDir["files"]) {
+            addOutput(selDir["files"][filename]["content"]);
+        } else throw "File does not exists";
+    } catch {
+        addOutput("cat: " + cmdContent + ": No such file or directory");
+        return;
+    }
 }
 
 function handle_cd(command) {
