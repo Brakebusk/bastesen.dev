@@ -189,6 +189,9 @@ function parseCommand(command) {
             case "help":
                 handle_help(command);
                 break;
+            case "sudo":
+                parseCommand(command.substr(5)) //Just parse rest of command
+                break;
             default:
                 addOutput("-bash: " + command + ": command not found");
         }
@@ -303,6 +306,7 @@ function handle_ls(command) {
                     break;
                 case "-r":
                     reverse = true;
+                    break;
                 default:
                     addOutput("ls: invalid option -- '" + options[i].slice(1) + "'");
                     return;
@@ -391,7 +395,46 @@ function handle_ls(command) {
 }
 
 function handle_mkdir(command) {
+    var content = command.slice(6); //Strip "mkdir "
+    var contentSplit = content.split(" ");
+    
+    for (var i = 0; i < contentSplit.length; i++) {
+        let dirSplit = contentSplit[i].split("/");
+        let folderName = dirSplit[dirSplit.length-1];
 
+        if (folderName == "") {
+            addOutput("mkdir: missing operand");
+            return;
+        }
+        
+        let relativePath = contentSplit[i].slice(0, contentSplit[i].length - folderName.length - 1)
+        
+        try {
+            var selDir = navigate(relativePath, false);
+        } catch {
+            addOutput("mkdir: " + relativePath + ": No such file or directory");
+            return;
+        }
+        
+        let exists = false;
+        if (folderName in selDir["files"] || folderName in selDir["directories"]) exists = true;
+
+        if (!exists) {
+            let d = new Date();
+            let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", 
+                          "Sept", "Oct", "Nov", "Dec"];
+
+            selDir["directories"][folderName] = {
+                "edited": months[d.getMonth()] + " " + d.getDate().toString() + " " + 
+                        d.getHours().toString() + ":" + d.getMinutes().toString(),
+                "files": {},
+                "directories": {}
+            }
+        } else {
+            addOutput("mkdir: cannot create directory '" + folderName + "': File exists");
+            return;
+        }
+    }
 }
 
 function handle_cat(command) {
