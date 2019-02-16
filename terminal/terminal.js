@@ -215,7 +215,7 @@ function addToLog(command) {
     elem.className = "command";
 
     let _path = path;
-    if (path == "/home/guest") _path = "~";
+    if (path.slice(0, 11) == "/home/guest") _path = "~" + path.slice(11);
     elem.textContent = "guest@brakebusk.com:" + _path + "$ " + command;
 
     document.getElementById("terminalOutput").appendChild(elem);
@@ -223,11 +223,14 @@ function addToLog(command) {
 
 function updatePathLabels() {
     //Set current path in command input and title bar
-    if (path == "/home/guest") document.getElementById("titlePath").textContent = "guest";
-    else document.getElementById("titlePath").textContent = path;
+    if (path == "/home/guest") {
+        document.getElementById("titlePath").textContent = "guest";
+    } else if (path.slice(0, 11) == "/home/guest") {
+        document.getElementById("titlePath").textContent = "~" + path.slice(11);
+    } else document.getElementById("titlePath").textContent = path;
 
     let _path = path;
-    if (path == "/home/guest") _path = "~";
+    if (path.slice(0, 11) == "/home/guest") _path = "~" + path.slice(11);
     document.getElementById("commandPath").textContent = "guest@brakebusk.com:" + _path + "$ ";
 }
 
