@@ -415,7 +415,7 @@ function handle_mkdir(command) {
         try {
             var selDir = navigate(relativePath, false);
         } catch {
-            addOutput("mkdir: " + relativePath + ": No such file or directory");
+            addOutput("mkdir: cannot create directory '" + relativePath + "': No such file or directory");
             return;
         }
         
@@ -465,7 +465,7 @@ function handle_cd(command) {
     try {
         path = navigate(relativePath, true); //Try to navigate
     } catch {
-        addOutput("-bash: cd: " + relativePath + ": No such file or directory");
+        addOutput("-bash: cd: " + relativePath + ": No such directory");
         return;
     }
     updatePathLabels();
@@ -476,7 +476,48 @@ function handle_pwd(command) {
 }
 
 function handle_touch(command) {
+    var content = command.slice(6); //Strip out "touch "
+    var contentSplit = content.split(" ");
 
+    for (var i = 0; i < contentSplit.length; i++) {
+        let dirSplit = contentSplit[i].split("/");
+        let filename = dirSplit[dirSplit.length-1];
+
+        if (filename == "") {
+            addOutput("touch: missing file operand");
+            return;
+        }
+
+        var relativePath = contentSplit[i].substr(0, contentSplit[i].length - filename.length - 1);
+
+        try {
+            var selDir = navigate(relativePath, false);
+        } catch {
+            addOutput("touch: cannot touch '" + relativePath + "': No such file or directory");
+            return;
+        }
+
+        let d = new Date();
+        let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", 
+                        "Sept", "Oct", "Nov", "Dec"];
+        var nowString = months[d.getMonth()] + " " + d.getDate().toString() + " " + 
+        d.getHours().toString() + ":" + d.getMinutes().toString();
+
+        if (filename in selDir["files"]) {
+            //Set edited flag to now for file
+            selDir["files"][filename]["edited"] = nowString;
+        } else if (filename in selDir["directories"]) {
+            //Set edited flag to now for directory
+            selDir["directories"][filename]["edited"] = nowString;
+        } else {
+            //Create file
+            selDir["files"][filename] = {
+                "content": "",
+                "edited": nowString,
+                "size": 0
+            }
+        }
+    }
 }
 
 function handle_head(command) {
