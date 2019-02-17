@@ -1,6 +1,7 @@
 # Terminal.js
 
 Mock bash terminal written in JS.
+
 https://brakebusk.github.io/brakebusk.com/terminal/terminal.html
 
 ## Supported commands:
