@@ -10,6 +10,8 @@
 #titleBar {
     padding: 1px 5px;
     background-color: #dcdcdc;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
 }
 #titleTitle {
     text-align: center;
