@@ -363,7 +363,7 @@ function handle_ls(command) {
         //Find largest file size:
         var longest = 0;
         for (var i = 0; i < files.length; i++) {
-            let s = selDir["files"][files[i]]["size"];
+            let s = selDir["files"][files[i]]["content"].length;
             if (s.toString().length > longest) longest = s.toString().length;
         }
         
@@ -384,7 +384,7 @@ function handle_ls(command) {
         for (var i = 0; i < files.length; i++) {
             if (output.length > 0) output += "\r\n";
 
-            let size = selDir["files"][files[i]]["size"];
+            let size = selDir["files"][files[i]]["content"].length;
             let edited = selDir["files"][files[i]]["edited"];
             let padding = longest - size.toString().length;
             if (padding < 0) padding = 0;
@@ -429,10 +429,13 @@ function handle_mkdir(command) {
         if (!exists) {
             let d = new Date();
             let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", 
-                          "Sept", "Oct", "Nov", "Dec"];
+                          "Sep", "Oct", "Nov", "Dec"];
+            
+            let date = d.getDate().toString()
+            if (date.length == 1) date += " ";
 
             selDir["directories"][folderName] = {
-                "edited": months[d.getMonth()] + " " + d.getDate().toString() + " " + 
+                "edited": months[d.getMonth()] + " " + date + " " + 
                         d.getHours().toString() + ":" + d.getMinutes().toString(),
                 "files": {},
                 "directories": {}
@@ -503,8 +506,10 @@ function handle_touch(command) {
 
         let d = new Date();
         let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", 
-                        "Sept", "Oct", "Nov", "Dec"];
-        var nowString = months[d.getMonth()] + " " + d.getDate().toString() + " " + 
+                        "Sep", "Oct", "Nov", "Dec"];
+        let date = d.getDate().toString()
+        if (date.length == 1) date += " ";
+        var nowString = months[d.getMonth()] + " " + date + " " + 
         d.getHours().toString() + ":" + d.getMinutes().toString();
 
         if (filename in selDir["files"]) {
@@ -517,8 +522,7 @@ function handle_touch(command) {
             //Create file
             selDir["files"][filename] = {
                 "content": "",
-                "edited": nowString,
-                "size": 0
+                "edited": nowString
             }
         }
     }
