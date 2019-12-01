@@ -479,7 +479,7 @@ function handle_cd(command) {
 }
 
 function handle_pwd(command) {
-
+    addOutput(path);
 }
 
 function handle_touch(command) {

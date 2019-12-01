@@ -15,7 +15,7 @@ https://brakebusk.github.io/brakebusk.com/terminal/terminal.html
 - [x] ls
 - [x] mkdir
 - [ ] mv
-- [ ] pwd
+- [x] pwd
 - [ ] quota
 - [ ] rm
 - [ ] rmdir
