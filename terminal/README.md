@@ -20,5 +20,5 @@ https://brakebusk.github.io/brakebusk.com/terminal/terminal.html
 - [ ] rm
 - [ ] rmdir
 - [x] touch
-- [ ] tail
+- [x] tail
 - [ ] grep

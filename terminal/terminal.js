@@ -282,7 +282,7 @@ function sortedKeys(dict, reverse) {
 //Command handling:
 
 function handle_ls(command) {
-    command = command.slice(3); //Strip "ls " beggining
+    command = command.slice(3); //Strip "ls "
     let options = command.split(" ");
     let relativePath = "";
 
@@ -529,6 +529,7 @@ function handle_touch(command) {
 }
 
 function handle_head(command) {
+    command = command.slice(5) //Strip out "head "
     var lines = 10; //Number of lines to print if not changed by the -n x flag
     var filePath = "";
 
@@ -539,15 +540,15 @@ function handle_head(command) {
             //Flag
             switch (options[i]) {
                 case "-n":
-                    try {
-                        lines = parseInt(options[i+1]);
-                    } catch(error) {
-                        if (i+1 == options.length) {
-                            addOutput("head: option requires an argument -- 'n'");
-                        } else {
-                            addOutput("head: invalid number of lines: '" + options[i+1] + "'");
-                        }
+                    if (i+1 == options.length) {
+                        addOutput("head: option requires an argument -- 'n'");
                         return;
+                    } else {
+                        lines = parseInt(options[++i]);
+                        if (isNaN(lines)) {
+                            addOutput("head: invalid number of lines: '" + options[i] + "'");
+                            return;
+                        }
                     }
                     break;
                 default:
@@ -565,8 +566,6 @@ function handle_head(command) {
 
     try {
         var selDir = navigate(relativePath, false);
-        console.log("success");
-
         if (filename in selDir["files"]) {
             var content = selDir["files"][filename]["content"].split("\n");
             var output = "";
@@ -583,7 +582,58 @@ function handle_head(command) {
 }
 
 function handle_tail(command) {
+    command = command.slice(5) //Strip out "tail "
+    var lines = 10; //Number of lines to print if not changed by the -n x flag
+    var filePath = "";
 
+    let options = command.split(" ");
+
+    for (var i = 0; i < options.length; i++) {
+        if (options[i][0] == "-") {
+            //Flag
+            switch (options[i]) {
+                case "-n":
+                    if (i+1 == options.length) {
+                        addOutput("tail: option requires an argument -- 'n'");
+                        return;
+                    } else {
+                        lines = parseInt(options[++i]);
+                        if (isNaN(lines)) {
+                            addOutput("tail: invalid number of lines: '" + options[i] + "'");
+                            return;
+                        }
+                    }
+                    break;
+                default:
+                    addOutput("tail: invalid option -- '" + options[i].slice(1) + "'");
+                    return;
+            }
+        } else {
+            filePath = options[i];
+        }
+    }
+    
+    let dirSplit = filePath.split("/");
+    var filename = dirSplit[dirSplit.length-1];
+    var relativePath = filePath.substr(0, filePath.length - filename.length - 1);
+
+    try {
+        var selDir = navigate(relativePath, false);
+        if (filename in selDir["files"]) {
+            var content = selDir["files"][filename]["content"].split("\n");
+            var output = "";
+
+            start = content.length - lines - 1;
+            if (start < 0) start = 0;
+            for (var i = start; i < content.length; i++) {
+                output += content[i] + "\r\n";
+            }
+            addOutput(output);
+        } else throw "File does not exists";
+    } catch(error) {
+        addOutput("tail: cannot open '" + filePath + "' for reading: No such file or directory");
+        return;
+    }
 }
 
 function handle_rm(command) {
