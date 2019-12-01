@@ -10,27 +10,16 @@
                     "guest": {
                         "edited": "Nov 5  19:17",
                         "files": {
-                            "readme.txt": {
-                                "content": "asda",
+                            "about.txt": {
+                                "content": "Simple mock bash terminal that supports some common commands like ls and cat.",
                                 "edited": "Nov 5  19:17"
                             },
-                            "doop.txt": {
-                                "content": "doop",
+                            "CV.txt": {
+                                "content": "    __  __                                   ____             __                     \n   / / / /__  _________ ___  ____ _____     / __ )____ ______/ /____  ________  ____ \n  / /_/ / _ \\/ ___/ __ `__ \\/ __ `/ __ \\   / __  / __ `/ ___/ __/ _ \\/ ___/ _ \\/ __ \\\n / __  /  __/ /  / / / / / / /_/ / / / /  / /_/ / /_/ (__  ) /_/  __(__  )  __/ / / /\n/_/ /_/\\___/_/  /_/ /_/ /_/\\__,_/_/ /_/  /_____/\\__,_/____/\\__/\\___/____/\\___/_/ /_/ \n\n  ___    _              _   _          \n | __|__| |_  _ __ __ _| |_(_)___ _ _  \n | _|/ _` | || / _/ _` |  _| / _ \\ ' \\ \n |___\\__,_|\\_,_\\__\\__,_|\\__|_\\___/_||_|\n\n- Bachelor’s degree in Informatics: Programming and System Architecture from the \nUniversity of Oslo.\n- International Baccalaureate Diploma from Bergen Cathedral School\n\n  ___                   _                 \n | __|_ ___ __  ___ _ _(_)___ _ _  __ ___ \n | _|\\ \\ / '_ \\/ -_) '_| / -_) ' \\/ _/ -_)\n |___/_\\_\\ .__/\\___|_| |_\\___|_||_\\__\\___|\n         |_|\n\nJanuary 2018 - :     Staff Engineer at Houston/USIT University of Oslo\n                     Role: IT support and AI trainer\nSummer 2016 - :      Entrepreneur, Beep Systems AS\n                     Role: Founder and software developer\nJune - August 2018 : Summer job at Nordhordland Folkehøgskole\nMay - July 2017 :    Summer job at Nordhordland Folkehøgskole\n\n   ___  _   _            \n  / _ \\| |_| |_  ___ _ _ \n | (_) |  _| ' \\/ -_) '_|\n  \\___/ \\__|_||_\\___|_|  \n\nLanguages: Norwegian and English\nProgramming languages: Java, Python, C, JS, VB.NET, Kotlin, Dart, Scheme",
                                 "edited": "Oct 20 08:25"
                             }
                         },
-                        "directories": {
-                            "downloads": {
-                                "edited": "Sep 7  12:13",
-                                "files": {},
-                                "directories": {}
-                            },
-                            "documents": {
-                                "edited": "Sep 7  12:13",
-                                "files": {},
-                                "directories": {}
-                            }
-                        }
+                        "directories": {}
                     }
                 }
             }
