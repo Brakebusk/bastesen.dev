@@ -220,7 +220,7 @@ function addToLog(command) {
 
     let _path = path;
     if (path.slice(0, 11) == "/home/guest") _path = "~" + path.slice(11);
-    elem.textContent = "guest@brakebusk.com:" + _path + "$ " + command;
+    elem.textContent = "guest@bastesen.dev:" + _path + "$ " + command;
 
     document.getElementById("terminalOutput").appendChild(elem);
 }
@@ -235,7 +235,7 @@ function updatePathLabels() {
 
     let _path = path;
     if (path.slice(0, 11) == "/home/guest") _path = "~" + path.slice(11);
-    document.getElementById("commandPath").textContent = "guest@brakebusk.com:" + _path + "$ ";
+    document.getElementById("commandPath").textContent = "guest@bastesen.dev:" + _path + "$ ";
 }
 
 function navigate(relativePath, getPath) {
