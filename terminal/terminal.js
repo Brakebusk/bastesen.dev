@@ -66,6 +66,10 @@ function enterCommand() {
     if (command.length > 0) commandHistory.push(command);
     parseCommand(command);
     updatePathLabels();
+
+    //Scroll to bottom
+    let terminal = document.getElementById("terminal");
+    terminal.scrollTop = terminal.scrollHeight;
 }
 
 function prevCommand() {
@@ -108,7 +112,7 @@ function autofill() {
 
     try {
         var selDir = navigate("", false);
-    } catch {
+    } catch(error) {
         console.log("Error: unable to navigate to current directory.");
     }
 
@@ -322,7 +326,7 @@ function handle_ls(command) {
 
     try {
         var selDir = navigate(relativePath, false);
-    } catch {
+    } catch(error) {
         addOutput("ls: cannot access '" + relativePath + "': No such file or directory");
         return;
     }
@@ -414,7 +418,7 @@ function handle_mkdir(command) {
         
         try {
             var selDir = navigate(relativePath, false);
-        } catch {
+        } catch(error) {
             addOutput("mkdir: cannot create directory '" + relativePath + "': No such file or directory");
             return;
         }
@@ -453,7 +457,7 @@ function handle_cat(command) {
         if (filename in selDir["files"]) {
             addOutput(selDir["files"][filename]["content"]);
         } else throw "File does not exists";
-    } catch {
+    } catch(error) {
         addOutput("cat: " + cmdContent + ": No such file or directory");
         return;
     }
@@ -464,7 +468,7 @@ function handle_cd(command) {
     
     try {
         path = navigate(relativePath, true); //Try to navigate
-    } catch {
+    } catch(error) {
         addOutput("-bash: cd: " + relativePath + ": No such directory");
         return;
     }
@@ -492,7 +496,7 @@ function handle_touch(command) {
 
         try {
             var selDir = navigate(relativePath, false);
-        } catch {
+        } catch(error) {
             addOutput("touch: cannot touch '" + relativePath + "': No such file or directory");
             return;
         }
@@ -533,7 +537,7 @@ function handle_head(command) {
                 case "-n":
                     try {
                         lines = parseInt(options[i+1]);
-                    } catch {
+                    } catch(error) {
                         if (i+1 == options.length) {
                             addOutput("head: option requires an argument -- 'n'");
                         } else {
@@ -568,7 +572,7 @@ function handle_head(command) {
             }
             addOutput(output);
         } else throw "File does not exists";
-    } catch {
+    } catch(error) {
         addOutput("head: cannot open '" + filePath + "' for reading: No such file or directory");
         return;
     }
