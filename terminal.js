@@ -11,7 +11,9 @@ function loadDirectories(filename) {
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             dirStruct = JSON.parse(this.responseText);
-            addOutput(handle_cat("cat welcome.txt"));
+
+            //Add welcome message:
+            addOutput(navigate("", false)["files"]["welcome.txt"]["content"], "10px");
         }
     };
     xmlhttp.open("GET", filename, true);
@@ -203,11 +205,12 @@ function parseCommand(command) {
     }
 }
 
-function addOutput(output) {
+function addOutput(output, fontSize) {
     //Add output to terminalOutput. Called after parsing a command
 
     let elem = document.createElement("div");
     elem.className = "commandOutput";
+    if (fontSize != undefined) elem.style.fontSize = fontSize;
     elem.textContent = output;
     document.getElementById("terminalOutput").appendChild(elem);
 }
