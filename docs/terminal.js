@@ -1,3 +1,5 @@
+/*! terminal.js - Herman Bastesen */
+
 var path = "/home/guest"; //Current path
 var dirStruct = null;
 var commandHistory = [];
