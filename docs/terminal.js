@@ -643,11 +643,11 @@ function handle_tail(command) {
 }
 
 function handle_rm(command) {
-
+    addOutput("Not implemented..");
 }
 
 function handle_rmdir(command) {
-
+    addOutput("Not implemented..");
 }
 
 function handle_history(command) {
@@ -662,19 +662,19 @@ function handle_history(command) {
 }
 
 function handle_cp(command) {
-
+    addOutput("Not implemented..");
 }
 
 function handle_mv(command) {
-
+    addOutput("Not implemented..");
 }
 
 function handle_find(command) {
-
+    addOutput("Not implemented..");
 }
 
 function handle_quota(command) {
-
+    addOutput("Not implemented..");
 }
 
 function handle_clear(command) {
