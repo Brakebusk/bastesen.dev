@@ -2,7 +2,7 @@
 
 Mock bash terminal written in JS.
 
-https://brakebusk.github.io/brakebusk.com/terminal/terminal.html
+https://bastesen.dev/
 
 ## Supported commands:
 - [x] cat
