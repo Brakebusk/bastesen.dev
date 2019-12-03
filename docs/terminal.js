@@ -731,6 +731,8 @@ function handle_cp(command) {
                 for (var i = 0; i < sourceAttr.length; i++) {
                     destDir["files"][destFilename][sourceAttr[i]] = selDir["files"][sourceFilename][sourceAttr[i]];
                 }
+
+                if (verbose) addOutput("'" + source + "' -> '" + dest + "'");
             } catch(error) {
                 //Unable to navigate to dest directory
                 addOutput("cp: cannot create regular file '" + dest + "': No such file or directory");
@@ -743,6 +745,26 @@ function handle_cp(command) {
                 var sourceAttr = sortedKeys(selDir["files"][sourceFilename], false);
 
                 destDir["directories"][destFilename] = { ...selDir["directories"][sourceFilename]};
+
+                if (verbose) {
+                    function rec(src, dst) {
+                        sFiles = sortedKeys(src["files"], false);
+                        sDirs = sortedKeys(src["directories"], false);
+
+                        dFiles = sortedKeys(dst["files"], false);
+                        dDirs = sortedKeys(dst["directories"], false);
+                        
+                        for (var i = 0; i < sFiles.length; i++) {
+                            addOutput("'" + sFiles[i] + "' -> '" + dFiles[i] + "'");
+                        }
+                        for (var i = 0; i < sDirs.length; i++) {
+                            addOutput("'" + sDirs[i] + "' -> '" + sDirs[i] + "'");                            
+                            rec(src["directories"][sDirs[i]], dst["directories"][dDirs[i]]);
+                        }
+                    }
+                    addOutput("'" + source + "' -> '" + dest + "'");
+                    rec(selDir["directories"][sourceFilename], destDir["directories"][destFilename]);
+                }
             } catch(error) {
                 //Unable to navigate to dest directory
                 addOutput("cp: cannot create directory '" + dest + "': No such file or directory");
@@ -810,7 +832,7 @@ function handle_help(command) {
     output += "cat <filename> \r\n";
     output += "cd <path> \r\n";
     output += "clear \r\n";
-    output += "cp \r\n";
+    output += "cp [-r] [-v] <source> <dest> \r\n";
     output += "find \r\n";
     output += "grep <pattern> <filename> \r\n";
     output += "head [-n nlines] <filename> \r\n";
