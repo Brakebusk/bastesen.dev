@@ -722,22 +722,23 @@ function handle_clear(command) {
 
 function handle_help(command) {
     let output = "";
-    output += "cat \r\n";
-    output += "cd \r\n";
+    output += "cat <filename> \r\n";
+    output += "cd <path> \r\n";
     output += "clear \r\n";
     output += "cp \r\n";
     output += "find \r\n";
-    output += "head \r\n";
+    output += "grep <pattern> <filename> \r\n";
+    output += "head [-n nlines] <filename> \r\n";
     output += "help \r\n";
     output += "history \r\n";
-    output += "ls \r\n";
+    output += "ls [-l] [-a] [-F] [-r] [path] \r\n";
     output += "mkdir \r\n";
     output += "mv \r\n";
     output += "pwd \r\n";
     output += "quota \r\n";
     output += "rm \r\n";
     output += "rmdir \r\n";
-    output += "touch \r\n";
-    output += "tail \r\n";
+    output += "touch <filename> \r\n";
+    output += "tail [-n nlines] <filename> \r\n";
     addOutput(output);
 }

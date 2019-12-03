@@ -10,6 +10,7 @@ https://bastesen.dev/
 - [x] clear
 - [ ] cp
 - [ ] find
+- [x] grep
 - [x] head
 - [x] history
 - [x] ls
@@ -21,4 +22,3 @@ https://bastesen.dev/
 - [ ] rmdir
 - [x] touch
 - [x] tail
-- [x] grep
