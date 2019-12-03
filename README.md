@@ -8,7 +8,7 @@ https://bastesen.dev/
 - [x] cat
 - [x] cd
 - [x] clear
-- [ ] cp
+- [x] cp
 - [ ] find
 - [x] grep
 - [x] head
@@ -17,7 +17,6 @@ https://bastesen.dev/
 - [x] mkdir
 - [ ] mv
 - [x] pwd
-- [ ] quota
 - [ ] rm
 - [ ] rmdir
 - [x] touch

@@ -192,9 +192,6 @@ function parseCommand(command) {
             case "find":
                 handle_find(command);
                 break;
-            case "quota":
-                handle_quota(command);
-                break;
             case "grep":
                 handle_grep(command);
                 break;
@@ -289,6 +286,11 @@ function sortedKeys(dict, reverse) {
     keys.sort();
     if (reverse) keys.reverse();
     return keys;
+}
+
+function getArgs(command) {
+    //Return command split by space except when within quotes
+    return command.match(/[^\s"']+|"([^"]*)"|'([^']*)'/gm);
 }
 
 //Command handling:
@@ -668,7 +670,94 @@ function handle_history(command) {
 }
 
 function handle_cp(command) {
-    addOutput("Not implemented..");
+    command = command.slice(3); //Strip "cp "
+    const args = getArgs(command);
+
+    //Possible option flags:
+    var recursive = false;
+    var verbose = false;
+    var force = false;
+
+    var source = null;
+    var dest = null;
+
+    //Parse options and get source/dest pair:
+    for (var i = 0; i < args.length; i++) {
+        if (args[i][0] == "-") {
+            switch(args[i]) {
+                case "-r":
+                case "-R":
+                    recursive = true;
+                    break;
+                case "-f":
+                    force = true;
+                    break;
+                case "-v":
+                    verbose = true;
+                    break;
+                default:
+                    addOutput("cp: invalid option -- '" + args[i].slice(1) + "'");
+            }
+        } else {
+            source = args[i];
+            if (i == args.length - 1) {
+                //Missing destination arg
+                addOutput("cp: missing destination file operand after '" + source + "'");
+            }
+            dest = args[i+1];
+            break;
+        }
+    }
+
+    //Perform copy:
+    try {
+        const sourceSplit = source.split("/");
+        const sourceFilename = sourceSplit[sourceSplit.length-1];
+        const sourceRelativePath = source.substr(0, source.length - sourceFilename.length - 1);
+
+        const destSplit = dest.split("/");
+        const destFilename = destSplit[destSplit.length-1];
+        const destRelativePath = dest.substr(0, dest.length - destFilename.length - 1);
+
+        var selDir = navigate(sourceRelativePath, false);
+        if (sourceFilename in selDir["files"]) {
+            //Copy file
+            try {
+                var destDir = navigate(destRelativePath);
+                var sourceAttr = sortedKeys(selDir["files"][sourceFilename], false);
+                
+                //Copy attributes:
+                destDir["files"][destFilename] = {};
+                for (var i = 0; i < sourceAttr.length; i++) {
+                    destDir["files"][destFilename][sourceAttr[i]] = selDir["files"][sourceFilename][sourceAttr[i]];
+                }
+            } catch(error) {
+                //Unable to navigate to dest directory
+                addOutput("cp: cannot create regular file '" + dest + "': No such file or directory");
+                return;
+            }
+        } else if (sourceFilename in selDir["directories"] && recursive) {
+            //Copy directory
+            try {
+                var destDir = navigate(destRelativePath);
+                var sourceAttr = sortedKeys(selDir["files"][sourceFilename], false);
+
+                destDir["directories"][destFilename] = { ...selDir["directories"][sourceFilename]};
+            } catch(error) {
+                //Unable to navigate to dest directory
+                addOutput("cp: cannot create directory '" + dest + "': No such file or directory");
+                return;
+            }
+        } else if (sourceFilename in selDir["directories"] && !recursive) {
+            //Source is a directory but recursive flag not set
+            addOutput("cp: -r not specified; omitting directory '"+ source + "'");
+            return;
+        } else throw "File does not exists";
+    } catch(error) {
+        //Unable to navigate to source directory
+        addOutput("cp: cannot stat: '" + source + "': No such file or directory");
+        return;
+    }
 }
 
 function handle_mv(command) {
@@ -679,14 +768,10 @@ function handle_find(command) {
     addOutput("Not implemented..");
 }
 
-function handle_quota(command) {
-    addOutput("Not implemented..");
-}
-
 function handle_grep(command) {
     command = command.slice(5) //Strip out "grep "
     //split by space unless inside quotes:
-    const args = command.match(/[^\s"']+|"([^"]*)"|'([^']*)'/gm);
+    const args = getArgs(command);
     const filepath = args[args.length-1];
     try {
         const pattern = RegExp(args[0]);
@@ -732,10 +817,9 @@ function handle_help(command) {
     output += "help \r\n";
     output += "history \r\n";
     output += "ls [-l] [-a] [-F] [-r] [path] \r\n";
-    output += "mkdir \r\n";
+    output += "mkdir <dirname> \r\n";
     output += "mv \r\n";
     output += "pwd \r\n";
-    output += "quota \r\n";
     output += "rm \r\n";
     output += "rmdir \r\n";
     output += "touch <filename> \r\n";
