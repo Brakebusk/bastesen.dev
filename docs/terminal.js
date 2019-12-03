@@ -28,7 +28,7 @@ function onloadPrep() {
     loadDirectories("directory.json"); //Load directory structure
     //Prevent up/down keys from changing carret position:
     document.getElementById('commandInput').addEventListener('keydown', function(e) {
-        if (e.which === 38 || e.which === 40 || e.which === 9) {
+        if (e.keyCode === 38 || e.keyCode === 40 || e.keyCode === 9 || (e.keyCode === 76 && e.ctrlKey)) {
             e.preventDefault();
         }
     });
@@ -55,6 +55,9 @@ function inputKeydown(event) {
             break;
         case 9: //Tab
             autofill();
+            break;
+        case 76: //l
+            if (event.ctrlKey) handle_clear();
     }
 }
 
