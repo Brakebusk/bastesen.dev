@@ -21,4 +21,4 @@ https://bastesen.dev/
 - [ ] rmdir
 - [x] touch
 - [x] tail
-- [ ] grep
+- [x] grep

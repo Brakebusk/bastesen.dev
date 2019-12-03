@@ -192,6 +192,9 @@ function parseCommand(command) {
             case "quota":
                 handle_quota(command);
                 break;
+            case "grep":
+                handle_grep(command);
+                break;
             case "clear":
                 handle_clear(command);
                 break;
@@ -675,6 +678,39 @@ function handle_find(command) {
 
 function handle_quota(command) {
     addOutput("Not implemented..");
+}
+
+function handle_grep(command) {
+    command = command.slice(5) //Strip out "grep "
+    //split by space unless inside quotes:
+    const args = command.match(/[^\s"']+|"([^"]*)"|'([^']*)'/gm);
+    const filepath = args[args.length-1];
+    try {
+        const pattern = RegExp(args[0]);
+    } catch(e) {
+        addOutput("grep: bad regular expression '" + args[0] + "'")
+        return;
+    }
+
+    //Borrow from cat:
+    let dirSplit = filepath.split("/");
+    var filename = dirSplit[dirSplit.length-1];
+    var relativePath = filepath.substr(0, filepath.length - filename.length - 1);
+
+    try {
+        var selDir = navigate(relativePath, false);
+
+        if (filename in selDir["files"]) {
+            const lines = selDir["files"][filename]["content"].split("\n");
+
+            for (var i = 0; i < lines.length; i++) {
+                if (pattern.test(lines[i])) addOutput(lines[i]);
+            }
+        } else throw "File does not exists";
+    } catch(error) {
+        addOutput("grep: " + filepath + ": No such file or directory");
+        return;
+    }    
 }
 
 function handle_clear(command) {
