@@ -40,7 +40,7 @@
     display: none;
 }
 .commandOutput {
-    white-space: pre;
+    white-space: pre-wrap;
 }
 #terminalInput {
     display: flex;
