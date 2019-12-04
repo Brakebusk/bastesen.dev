@@ -698,12 +698,20 @@ function handle_rm(command) {
     const args = getArgs(command);
 
     var recursive = false;
+    var verbose = false;
+    var force = false;
 
     for (var i = 0; i < args.length; i++) {
         if (args[i][0] == "-") {
             switch(args[i]) {
                 case "-r":
                     recursive = true;
+                    break;
+                case "-v":
+                    verbose = true;
+                    break;
+                case "-f":
+                    verbose = true;
                     break;
                 default:
                     addOutput("cp: invalid option -- '" + args[i].slice(1) + "'");
@@ -721,8 +729,23 @@ function handle_rm(command) {
 
                 if (rmName in realPath["files"]) {
                     delete realPath["files"][rmName];
+                    if (verbose) addOutput("removed '" + rmPath + "'");
                 } else if (rmName in realPath["directories"]) {
                     if (recursive) {
+                        function rec(sel) {
+                            const sFiles = sortedKeys(sel["files"], false);
+                            const sDirs = sortedKeys(sel["directories"], false);
+                            
+                            for (var j = 0; j < sFiles.length; j++) {
+                                addOutput("removed '" + sFiles[j] + "'");
+                            }
+                            for (var j = 0; j < sDirs.length; j++) {
+                                rec(sel["directories"][sDirs[j]]);
+                                addOutput("removed directory '" + sDirs[j] + "'");                            
+                            }
+                        }
+                        rec(realPath["directories"][rmName]);
+                        addOutput("removed directory '" + rmPath + "'");
                         delete realPath["directories"][rmName];                        
                     } else {
                         addOutput("rm: cannot remove '" + rmPath + "': Is a directory");
@@ -862,11 +885,11 @@ function handle_cp(command) {
 
                 if (verbose) {
                     function rec(src, dst) {
-                        sFiles = sortedKeys(src["files"], false);
-                        sDirs = sortedKeys(src["directories"], false);
+                        const sFiles = sortedKeys(src["files"], false);
+                        const sDirs = sortedKeys(src["directories"], false);
 
-                        dFiles = sortedKeys(dst["files"], false);
-                        dDirs = sortedKeys(dst["directories"], false);
+                        const dFiles = sortedKeys(dst["files"], false);
+                        const dDirs = sortedKeys(dst["directories"], false);
                         
                         for (var i = 0; i < sFiles.length; i++) {
                             addOutput("'" + sFiles[i] + "' -> '" + dFiles[i] + "'");

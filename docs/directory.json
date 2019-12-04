@@ -23,7 +23,21 @@
                                 "edited": "Des 1  18:25"
                             }
                         },
-                        "directories": {}
+                        "directories": {
+                            "test": {
+                                "files": {},
+                                "directories": {
+                                    "inner": {
+                                        "files": {},
+                                        "directories": {}
+                                    },
+                                    "inner2": {
+                                        "files": {},
+                                        "directories": {}
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
