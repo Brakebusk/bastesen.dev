@@ -15,7 +15,7 @@ https://bastesen.dev/
 - [x] history
 - [x] ls
 - [x] mkdir
-- [ ] mv
+- [x] mv
 - [x] pwd
 - [ ] rm
 - [ ] rmdir

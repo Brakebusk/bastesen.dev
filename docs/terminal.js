@@ -826,7 +826,109 @@ function handle_cp(command) {
 }
 
 function handle_mv(command) {
-    addOutput("Not implemented..");
+    command = command.slice(3); //Strip "mv "
+    const args = getArgs(command);
+
+    //Possible option flags:
+    var verbose = false;
+    var force = false;
+
+    var source = null;
+    var dest = null;
+
+    //Parse options and get source/dest pair:
+    for (var i = 0; i < args.length; i++) {
+        if (args[i][0] == "-") {
+            switch(args[i]) {
+                case "-f":
+                    force = true;
+                    break;
+                case "-v":
+                    verbose = true;
+                    break;
+                default:
+                    addOutput("mv: invalid option -- '" + args[i].slice(1) + "'");
+            }
+        } else {
+            source = args[i];
+            if (i == args.length - 1) {
+                //Missing destination arg
+                addOutput("mv: missing destination file operand after '" + source + "'");
+            }
+            dest = args[i+1];
+            break;
+        }
+    }
+
+    //Perform move:
+    try {
+        const sourceSplit = source.split("/");
+        const sourceFilename = sourceSplit[sourceSplit.length-1];
+        const sourceRelativePath = source.substr(0, source.length - sourceFilename.length - 1);
+
+        const destSplit = dest.split("/");
+        const destFilename = destSplit[destSplit.length-1];
+        const destRelativePath = dest.substr(0, dest.length - destFilename.length - 1);
+
+        var selDir = navigate(sourceRelativePath, false);
+        if (sourceFilename in selDir["files"]) {
+            //Move file
+            try {
+                var destDir = navigate(destRelativePath);
+                var sourceAttr = sortedKeys(selDir["files"][sourceFilename], false);
+                
+                //Move attributes:
+                destDir["files"][destFilename] = {};
+                for (var i = 0; i < sourceAttr.length; i++) {
+                    destDir["files"][destFilename][sourceAttr[i]] = selDir["files"][sourceFilename][sourceAttr[i]];
+                }
+                delete selDir["files"][sourceFilename];
+
+                if (verbose) addOutput("'" + source + "' -> '" + dest + "'");
+            } catch(error) {
+                //Unable to navigate to dest directory
+                addOutput("mv: cannot create regular file '" + dest + "': No such file or directory");
+                return;
+            }
+        } else if (sourceFilename in selDir["directories"]) {
+            //Move directory
+            try {
+                var destDir = navigate(destRelativePath);
+                var sourceAttr = sortedKeys(selDir["files"][sourceFilename], false);
+
+                destDir["directories"][destFilename] = { ...selDir["directories"][sourceFilename]};
+                delete selDir["directories"][sourceFilename];
+
+                if (verbose) {
+                    function rec(src, dst) {
+                        sFiles = sortedKeys(src["files"], false);
+                        sDirs = sortedKeys(src["directories"], false);
+
+                        dFiles = sortedKeys(dst["files"], false);
+                        dDirs = sortedKeys(dst["directories"], false);
+                        
+                        for (var i = 0; i < sFiles.length; i++) {
+                            addOutput("'" + sFiles[i] + "' -> '" + dFiles[i] + "'");
+                        }
+                        for (var i = 0; i < sDirs.length; i++) {
+                            addOutput("'" + sDirs[i] + "' -> '" + sDirs[i] + "'");                            
+                            rec(src["directories"][sDirs[i]], dst["directories"][dDirs[i]]);
+                        }
+                    }
+                    addOutput("'" + source + "' -> '" + dest + "'");
+                    rec(selDir["directories"][sourceFilename], destDir["directories"][destFilename]);
+                }
+            } catch(error) {
+                //Unable to navigate to dest directory
+                addOutput("mv: cannot create directory '" + dest + "': No such file or directory");
+                return;
+            }
+        } else throw "File does not exists";
+    } catch(error) {
+        //Unable to navigate to source directory
+        addOutput("mv: cannot stat: '" + source + "': No such file or directory");
+        return;
+    }
 }
 
 function handle_find(command) {
