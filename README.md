@@ -17,7 +17,7 @@ https://bastesen.dev/
 - [x] mkdir
 - [x] mv
 - [x] pwd
-- [ ] rm
+- [x] rm
 - [x] rmdir
 - [x] touch
 - [x] tail

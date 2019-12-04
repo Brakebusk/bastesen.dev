@@ -1096,10 +1096,10 @@ function handle_help(command) {
     output += "history \r\n";
     output += "ls [-l] [-a] [-F] [-r] [path] \r\n";
     output += "mkdir <dirname> \r\n";
-    output += "mv \r\n";
+    output += "mv [-v] <source> <dest>\r\n";
     output += "pwd \r\n";
-    output += "rm \r\n";
-    output += "rmdir \r\n";
+    output += "rm [-r] [-v] <path> \r\n";
+    output += "rmdir <directory> \r\n";
     output += "touch <filename> \r\n";
     output += "tail [-n nlines] <filename> \r\n";
     addOutput(output);

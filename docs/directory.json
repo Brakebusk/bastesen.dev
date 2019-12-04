@@ -24,18 +24,9 @@
                             }
                         },
                         "directories": {
-                            "test": {
+                            "docs": {
                                 "files": {},
-                                "directories": {
-                                    "inner": {
-                                        "files": {},
-                                        "directories": {}
-                                    },
-                                    "inner2": {
-                                        "files": {},
-                                        "directories": {}
-                                    }
-                                }
+                                "directories": {}
                             }
                         }
                     }
