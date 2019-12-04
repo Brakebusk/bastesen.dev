@@ -96,6 +96,7 @@ function enterCommand() {
 function cancelCommand() {
     //Cancel current command (initially only cancel awaitInput)
 
+    document.getElementById("commandInput").type = "text";
     awaitInput = false;
     callBack = null;
     updatePathLabels();
@@ -104,12 +105,13 @@ function cancelCommand() {
     terminal.scrollTop = terminal.scrollHeight;
 }
 
-function createAwaitInput(prompt, cBack) {
+function createAwaitInput(prompt, cBack, hide) {
     //Prompt user for input and call that input on cBack
 
     awaitInput = true;
     callBack = cBack;
     document.getElementById("commandPath").textContent = prompt + ": ";
+    if (hide) document.getElementById("commandInput").type = "password";
 }
 
 function prevCommand() {
@@ -881,7 +883,7 @@ function handle_sudo(command) {
             } else {
                  addOutput("Sorry, try again.");
             }
-        });
+        }, true);
     }
 }
 
