@@ -897,13 +897,12 @@ function handle_mv(command) {
                 var sourceAttr = sortedKeys(selDir["files"][sourceFilename], false);
 
                 destDir["directories"][destFilename] = { ...selDir["directories"][sourceFilename]};
-                delete selDir["directories"][sourceFilename];
-
+                
                 if (verbose) {
                     function rec(src, dst) {
                         sFiles = sortedKeys(src["files"], false);
                         sDirs = sortedKeys(src["directories"], false);
-
+                        
                         dFiles = sortedKeys(dst["files"], false);
                         dDirs = sortedKeys(dst["directories"], false);
                         
@@ -918,6 +917,7 @@ function handle_mv(command) {
                     addOutput("'" + source + "' -> '" + dest + "'");
                     rec(selDir["directories"][sourceFilename], destDir["directories"][destFilename]);
                 }
+                delete selDir["directories"][sourceFilename];
             } catch(error) {
                 //Unable to navigate to dest directory
                 addOutput("mv: cannot create directory '" + dest + "': No such file or directory");
