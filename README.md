@@ -18,6 +18,6 @@ https://bastesen.dev/
 - [x] mv
 - [x] pwd
 - [ ] rm
-- [ ] rmdir
+- [x] rmdir
 - [x] touch
 - [x] tail

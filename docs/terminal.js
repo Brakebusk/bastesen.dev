@@ -698,7 +698,31 @@ function handle_rm(command) {
 }
 
 function handle_rmdir(command) {
-    addOutput("Not implemented..");
+    command = command.slice(6); //Strip "mkdir "
+
+    const args = getArgs(command);
+    for (var i = 0; i < args.length; i++) {
+        //For each folder in the argument list
+        var dirPath = args[i];
+        var dirSplit = dirPath.split("/");
+
+        var dirName = dirSplit[dirSplit.length-1];
+        var dirRelativePath = dirPath.substr(0, dirPath.length - dirName.length - 1);
+
+        try {
+            var rmDir = navigate(dirRelativePath); //Find parent folder
+
+            if (dirName in rmDir["directories"]) {
+                delete rmDir["directories"][dirName];
+            } else if (dirName in rmDir["files"]) {
+                addOutput("rmdir: failed to remove '" + dirPath + "': Not a directory");
+                continue;
+            }
+        } catch(error) {
+            addOutput("rmdir: failed to remove '" + dirPath + "': No such file or directory");
+            continue;
+        }
+    }
 }
 
 function handle_history(command) {
