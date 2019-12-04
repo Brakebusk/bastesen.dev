@@ -5,6 +5,10 @@ var dirStruct = null;
 var commandHistory = [];
 var tmpCmd = ""; //Temporary command storage
 var cIndex = -1; //Hold current selected command index for up/down keys
+const pHash = "ea0f410429251b2dae95446bdf63958df0cb2dd7190680ebf80d3db37abca93e"; //Hash of password for sudo
+var auth = null; //Hash of password entered by user
+var awaitInput = false; //If next command should be interpreted as input for prev
+var callBack = null; //Callback after await input
 
 function loadDirectories(filename) {
     //Load and return JSON file
@@ -58,6 +62,9 @@ function inputKeydown(event) {
             break;
         case 76: //l
             if (event.ctrlKey) handle_clear();
+            break;
+        case 67: //c
+            if (event.ctrlKey) cancelCommand();
     }
 }
 
@@ -68,16 +75,41 @@ function enterCommand() {
     tmpCmd = ""; //Reset temporary input storage
     let inputElem = document.getElementById("commandInput");
     let command = inputElem.value;
-    addToLog(command);
     inputElem.value = "";
-
-    if (command.length > 0) commandHistory.push(command);
-    parseCommand(command);
-    updatePathLabels();
+    
+    if (!awaitInput) {
+        //Normal command
+        addToLog(command);
+        if (command.length > 0) commandHistory.push(command);
+        parseCommand(command);
+        if (!awaitInput) updatePathLabels();
+    } else {
+        //call command on callback
+        callBack(command);
+    }
 
     //Scroll to bottom
     let terminal = document.getElementById("terminal");
     terminal.scrollTop = terminal.scrollHeight;
+}
+
+function cancelCommand() {
+    //Cancel current command (initially only cancel awaitInput)
+
+    awaitInput = false;
+    callBack = null;
+    updatePathLabels();
+    //Scroll to bottom
+    let terminal = document.getElementById("terminal");
+    terminal.scrollTop = terminal.scrollHeight;
+}
+
+function createAwaitInput(prompt, cBack) {
+    //Prompt user for input and call that input on cBack
+
+    awaitInput = true;
+    callBack = cBack;
+    document.getElementById("commandPath").textContent = prompt + ": ";
 }
 
 function prevCommand() {
@@ -202,7 +234,7 @@ function parseCommand(command) {
                 handle_help(command);
                 break;
             case "sudo":
-                parseCommand(command.substr(5)) //Just parse rest of command
+                handle_sudo(command);
                 break;
             default:
                 addOutput("-bash: " + command + ": command not found");
@@ -292,6 +324,15 @@ function getArgs(command) {
     //Return command split by space except when within quotes
     return command.match(/[^\s"']+|"([^"]*)"|'([^']*)'/gm);
 }
+
+async function digestMessage(message) {
+    //Return sha256 hash of message
+    const msgUint8 = new TextEncoder().encode(message);                           // encode as (utf-8) Uint8Array
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);           // hash the message
+    const hashArray = Array.from(new Uint8Array(hashBuffer));                     // convert buffer to byte array
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); // convert bytes to hex string
+    return hashHex;
+  }
 
 //Command handling:
 
@@ -825,6 +866,23 @@ function handle_grep(command) {
 
 function handle_clear(command) {
     document.getElementById("terminalOutput").innerHTML = "";
+}
+
+function handle_sudo(command) {
+    if (auth === pHash) {
+        parseCommand(command.substr(5)) //Just parse rest of command
+    } else {
+        //Must auth
+        createAwaitInput("[sudo] password for guest", async function (password) {
+            auth = await digestMessage(password);
+            if (auth === pHash) {
+                parseCommand(command.substr(5)) //Just parse rest of command
+                cancelCommand();
+            } else {
+                 addOutput("Sorry, try again.");
+            }
+        });
+    }
 }
 
 function handle_help(command) {

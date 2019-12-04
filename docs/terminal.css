@@ -45,6 +45,9 @@
 #terminalInput {
     display: flex;
 }
+#commandPath {
+    white-space: pre;
+}
 #commandInput {
     background-color: transparent;
     border: none;
