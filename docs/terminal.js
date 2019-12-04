@@ -694,7 +694,50 @@ function handle_tail(command) {
 }
 
 function handle_rm(command) {
-    addOutput("Not implemented..");
+    command = command.slice(3); //Strip "rm "
+    const args = getArgs(command);
+
+    var recursive = false;
+
+    for (var i = 0; i < args.length; i++) {
+        if (args[i][0] == "-") {
+            switch(args[i]) {
+                case "-r":
+                    recursive = true;
+                    break;
+                default:
+                    addOutput("cp: invalid option -- '" + args[i].slice(1) + "'");
+                    return;
+            }
+        } else {
+            var rmPath = args[i];
+            var pathSplit = rmPath.split("/");
+
+            var rmName = pathSplit[pathSplit.length-1];
+            var rmRelativePath = rmPath.substr(0, rmPath.length - rmName.length - 1);
+
+            try {
+                var realPath = navigate(rmRelativePath); //Find parent folder
+
+                if (rmName in realPath["files"]) {
+                    delete realPath["files"][rmName];
+                } else if (rmName in realPath["directories"]) {
+                    if (recursive) {
+                        delete realPath["directories"][rmName];                        
+                    } else {
+                        addOutput("rm: cannot remove '" + rmPath + "': Is a directory");
+                        continue;
+                    }
+                } else {
+                    addOutput("rm: failed to remove '" + rmPath + "': No such file or directory");
+                    continue;
+                }                
+            } catch(error) {
+                addOutput("rm: failed to remove '" + rmPath + "': No such file or directory");
+                continue;
+            }
+        }
+    }
 }
 
 function handle_rmdir(command) {
@@ -716,6 +759,9 @@ function handle_rmdir(command) {
                 delete rmDir["directories"][dirName];
             } else if (dirName in rmDir["files"]) {
                 addOutput("rmdir: failed to remove '" + dirPath + "': Not a directory");
+                continue;
+            } else {
+                addOutput("rmdir: failed to remove '" + dirPath + "': No such file or directory");
                 continue;
             }
         } catch(error) {
@@ -764,6 +810,7 @@ function handle_cp(command) {
                     break;
                 default:
                     addOutput("cp: invalid option -- '" + args[i].slice(1) + "'");
+                    return;
             }
         } else {
             source = args[i];
