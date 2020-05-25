@@ -153,8 +153,15 @@ function autofill() {
     let query = cmdInput.value.split(" ");
     query = query[query.length - 1]; //Restrict to only last word typed
 
+    //Exmaple 'cat docs/files/gith':
+    //path should be 'docs/files'
+    //filename to fill should be 'gith'
+    let dirSplit = query.split("/");
+    var filename = dirSplit[dirSplit.length-1];
+    let relativePath = query.substr(0, query.length - filename.length - 1);
+
     try {
-        var selDir = navigate("", false);
+        var selDir = navigate(relativePath, false);
     } catch(error) {
         console.log("Error: unable to navigate to current directory.");
     }
@@ -171,12 +178,12 @@ function autofill() {
 
     //Create match function:
     function isMatch(name) {
-        return name.startsWith(query);
+        return name.startsWith(filename);
     }
     let closest = all.find(isMatch);
 
     if (closest) {
-        cmdInput.value += closest.slice(query.length); //Fill in rest
+        cmdInput.value += closest.slice(filename.length); //Fill in rest
     }
 }
 
