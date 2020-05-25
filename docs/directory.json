@@ -1,21 +1,21 @@
 {
     "/": {
-        "edited": "Nov 5  19:17",
+        "edited": "May 25 18:39",
         "files": {},
         "directories": {
             "home": {
-                "edited": "Nov 5  19:17",
+                "edited": "May 25 18:39",
                 "files": {},
                 "directories": {
                     "guest": {
-                        "edited": "Nov 5  19:17",
+                        "edited": "May 25 18:39",
                         "files": {
                             "welcome.txt": {
                                 "content": "\n ██████╗  █████╗ ███████╗████████╗███████╗███████╗███████╗███╗   ██╗   ██████╗ ███████╗██╗   ██╗\n ██╔══██╗██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔════╝██╔════╝████╗  ██║   ██╔══██╗██╔════╝██║   ██║\n ██████╔╝███████║███████╗   ██║   █████╗  ███████╗█████╗   ██╔██╗ ██║   ██║  ██║█████╗  ██║   ██║\n ██╔══██╗██╔══██║╚════██║   ██║   ██╔══╝  ╚════██║██╔══╝   ██║╚██╗██║   ██║  ██║██╔══╝  ╚██╗ ██╔╝\n ██████╔╝██║  ██║███████║   ██║   ███████╗███████║███████╗██║ ╚████║██╗██████╔╝███████╗ ╚████╔╝ \n ╚═════╝ ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝╚══════╝╚══════╝╚═╝  ╚═══╝╚═╝╚═════╝ ╚══════╝  ╚═══╝  \n",
                                 "edited": "Des 2  14:11"
                             },
                             "about.txt": {
-                                "content": "Simple mock bash terminal I wrote for fun, that supports some common commands like ls and cat.",
+                                "content": "Simple mock bash terminal supporting common file system commands.",
                                 "edited": "Nov 5  19:17"
                             },
                             "CV.txt": {
@@ -25,7 +25,22 @@
                         },
                         "directories": {
                             "docs": {
+                                "edited": "Nov 2  10:10",
                                 "files": {},
+                                "directories": {}
+                            },
+                            "contact": {
+                                "edited": "May 25 18:39",
+                                "files": {
+                                    "github.txt": {
+                                        "content": "\n        -/syhdddhyo/.        \n    `:yNMMMMMMMMMMMMMmy:`    \n   /mMMNNMMMMMMMMMMMNNMMd/   \n `hMMMy.-+yhysssyhy+-.hMMMy` \n`dMMMMo               oMMMMd`\nsMMMMd.               .mMMMMo\nNMMMM:                 /MMMMm\nNMMMM/                 +MMMMN\nhMMMMd`               .mMMMMy\n-NMMmNm+-`         `-omMMMMN.\n :NMh/sNNmd-     :mmNMMMMMN: \n  .hMN/-++/       NMMMMMMy.  \n    -yNmdhh       NMMMNy-    \n      `:ohy       hho:`      \n                             \nhttps://github.com/Brakebusk/\n\n",
+                                        "edited": "May 25 18:39"
+                                    },
+                                    "email.txt": {
+                                        "content": "herman@beep-system.no",
+                                        "edited": "May 25 18:39"
+                                    }
+                                },
                                 "directories": {}
                             }
                         }

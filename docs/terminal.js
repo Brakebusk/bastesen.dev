@@ -11,7 +11,7 @@ var awaitInput = false; //If next command should be interpreted as input for pre
 var callBack = null; //Callback after await input
 
 function loadDirectories(filename) {
-    //Load and return JSON file
+    //Load and and parse JSON file holding directory structure
 
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
@@ -27,7 +27,7 @@ function loadDirectories(filename) {
 }
 
 function onloadPrep() {
-    //Onload preparations
+    //Called at load to load directory structure and configure certain key behaviour
     
     loadDirectories("directory.json"); //Load directory structure
     //Prevent up/down keys from changing carret position:
@@ -45,7 +45,8 @@ function focusInput() {
 }
 
 function inputKeydown(event) {
-    //Called each time user presses key while input box is in focus
+    //Called each time user presses key while input box is in focus to check for special
+    //key combinations.
 
     switch (event.keyCode) {
         case 13: //Enter
