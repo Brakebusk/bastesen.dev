@@ -41,6 +41,7 @@
     overflow-y: scroll;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    height: 440px;
 }
 #terminal::-webkit-scrollbar {
     display: none;
